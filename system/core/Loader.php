@@ -64,28 +64,35 @@ class CI_Loader {
 	 *
 	 * @var	array
 	 */
-	protected $_ci_view_paths =	array(VIEWPATH	=> TRUE);
+	// protected $_ci_view_paths =	array(VIEWPATH	=> TRUE);
+	//AZ
+	protected $_ci_view_paths =	array(VIEWPATH	=> TRUE, DEFVIEWPATH => TRUE, SYSVIEWPATH => TRUE);
 
 	/**
 	 * List of paths to load libraries from
 	 *
 	 * @var	array
 	 */
-	protected $_ci_library_paths =	array(APPPATH, BASEPATH);
+	// protected $_ci_library_paths =	array(APPPATH, BASEPATH);
+	//AZ
+	protected $_ci_library_paths =	array(APPPATH, DEFPATH, BASEPATH);
 
 	/**
 	 * List of paths to load models from
 	 *
 	 * @var	array
 	 */
-	protected $_ci_model_paths =	array(APPPATH);
+	//BD
+	protected $_ci_model_paths =	array(APPPATH, DEFPATH, BASEPATH);
 
 	/**
 	 * List of paths to load helpers from
 	 *
 	 * @var	array
 	 */
-	protected $_ci_helper_paths =	array(APPPATH, BASEPATH);
+	// protected $_ci_helper_paths =	array(APPPATH, BASEPATH);
+	//AZ
+	protected $_ci_helper_paths =	array(APPPATH, DEFPATH, BASEPATH);
 
 	/**
 	 * List of cached variables
@@ -1302,11 +1309,23 @@ class CI_Loader {
 		{
 			include(APPPATH.'config/autoload.php');
 		}
+		
+		else { //AZ
+			if (file_exists(DEFPATH.'config/autoload.php')) { //AZ
+				include(DEFPATH.'config/autoload.php'); //AZ
+			} //AZ
+		} //AZ
 
 		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/autoload.php'))
 		{
 			include(APPPATH.'config/'.ENVIRONMENT.'/autoload.php');
 		}
+		else { //AZ
+			if (file_exists(DEFPATH.'config/'.ENVIRONMENT.'/autoload.php')) { //AZ
+				include(DEFPATH.'config/'.ENVIRONMENT.'/autoload.php'); //AZ
+			} //AZ
+		} //AZ
+
 
 		if ( ! isset($autoload))
 		{

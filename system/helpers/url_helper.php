@@ -89,6 +89,18 @@ if ( ! function_exists('base_url'))
 	}
 }
 
+if ( ! function_exists('app_url'))
+{
+	/**
+	 * App URL
+	 *
+	 */
+	function app_url($uri = '', $protocol = NULL)
+	{
+		return get_instance()->config->item('app_url');
+	}
+}
+
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('current_url'))

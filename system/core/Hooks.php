@@ -103,11 +103,21 @@ class CI_Hooks {
 		{
 			include(APPPATH.'config/hooks.php');
 		}
+		else { //AZ
+			if (file_exists(DEFPATH.'config/hooks.php')) { //AZ
+				include(DEFPATH.'config/hooks.php'); //AZ
+			}	 //AZ
+		} //AZ
 
 		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/hooks.php'))
 		{
 			include(APPPATH.'config/'.ENVIRONMENT.'/hooks.php');
 		}
+		else { //AZ
+			if (file_exists(DEFPATH.'config/'.ENVIRONMENT.'/hooks.php')) { //AZ
+				include(DEFPATH.'config/'.ENVIRONMENT.'/hooks.php'); //AZ
+			} //AZ
+		} //AZ
 
 		// If there are no hooks, we're done.
 		if ( ! isset($hook) OR ! is_array($hook))

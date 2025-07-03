@@ -162,11 +162,21 @@ class CI_Router {
 		{
 			include(APPPATH.'config/routes.php');
 		}
+		else { //AZ
+			if (file_exists(DEFPATH.'config/routes.php')) { //AZ
+				include(DEFPATH.'config/routes.php'); //AZ
+			} //AZ
+		} //AZ
 
 		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
 		{
 			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
 		}
+		else { //AZ
+			if (file_exists(DEFPATH.'config/'.ENVIRONMENT.'/routes.php')) { //AZ
+				include(DEFPATH.'config/'.ENVIRONMENT.'/routes.php'); //AZ
+			} //AZ
+		} //AZ
 
 		// Validate & get reserved routes
 		if (isset($route) && is_array($route))
@@ -304,7 +314,12 @@ class CI_Router {
 		if ( ! file_exists(APPPATH.'controllers/'.$this->directory.ucfirst($class).'.php'))
 		{
 			// This will trigger 404 later
-			return;
+			// return;
+			//azazaz
+			if ( ! file_exists(DEFPATH.'controllers/'.$this->directory.ucfirst($class).'.php')) {
+				// This will trigger 404 later
+				return;
+			}	
 		}
 
 		$this->set_class($class);

@@ -65,13 +65,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 	if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/constants.php'))
 	{
-		require_once(APPPATH.'config/'.ENVIRONMENT.'/constants.php');
+		if (!file_exists(require_once(APPPATH.'config/'.ENVIRONMENT.'/constants.php'))) { //AZ
+			require_once(DEFPATH.'config/'.ENVIRONMENT.'/constants.php'); //AZ
+		} //AZ
+		else { //AZ
+			require_once(APPPATH.'config/'.ENVIRONMENT.'/constants.php');
+		} //AZ
 	}
-
-	if (file_exists(APPPATH.'config/constants.php'))
-	{
+	//AZ
+	if (!file_exists(APPPATH.'config/constants.php')) { //AZ
+		require_once(DEFPATH.'config/constants.php'); //AZ
+	} //AZ
+	else { //AZ
 		require_once(APPPATH.'config/constants.php');
-	}
+	} //AZ
 
 /*
  * ------------------------------------------------------
@@ -403,6 +410,9 @@ if ( ! is_php('5.4'))
 	$class = ucfirst($RTR->class);
 	$method = $RTR->method;
 
+	//AZ default path
+	$defpath = DEFPATH.'controllers/'.$RTR->directory.$class.'.php';
+
 	if (empty($class) OR ! file_exists(APPPATH.'controllers/'.$RTR->directory.$class.'.php'))
 	{
 		$e404 = TRUE;
@@ -442,6 +452,56 @@ if ( ! is_php('5.4'))
 			{
 				$e404 = TRUE;
 			}
+		}
+	}
+
+	//AZ default path
+	if ($e404 && file_exists($defpath)) {
+		$e404 = FALSE;
+		require_once(DEFPATH.'controllers/'.$RTR->directory.$class.'.php');
+
+		if ( ! class_exists($class, FALSE) OR $method[0] === '_' OR method_exists('CI_Controller', $method))
+		{
+			$e404 = TRUE;
+		}
+		elseif (method_exists($class, '_remap'))
+		{
+			$params = array($method, array_slice($URI->rsegments, 2));
+			$method = '_remap';
+		}
+		// WARNING: It appears that there are issues with is_callable() even in PHP 5.2!
+		// Furthermore, there are bug reports and feature/change requests related to it
+		// that make it unreliable to use in this context. Please, DO NOT change this
+		// work-around until a better alternative is available.
+		elseif ( ! in_array(strtolower($method), array_map('strtolower', get_class_methods($class)), TRUE))
+		{
+			$e404 = TRUE;
+		}
+	}
+
+
+	//AZ system path
+	$syspath = BASEPATH.'controllers/'.$RTR->directory.$class.'.php';
+	if ($e404 && file_exists($syspath)) {
+		$e404 = FALSE;
+		require_once(BASEPATH.'controllers/'.$RTR->directory.$class.'.php');
+
+		if ( ! class_exists($class, FALSE) OR $method[0] === '_' OR method_exists('CI_Controller', $method))
+		{
+			$e404 = TRUE;
+		}
+		elseif (method_exists($class, '_remap'))
+		{
+			$params = array($method, array_slice($URI->rsegments, 2));
+			$method = '_remap';
+		}
+		// WARNING: It appears that there are issues with is_callable() even in PHP 5.2!
+		// Furthermore, there are bug reports and feature/change requests related to it
+		// that make it unreliable to use in this context. Please, DO NOT change this
+		// work-around until a better alternative is available.
+		elseif ( ! in_array(strtolower($method), array_map('strtolower', get_class_methods($class)), TRUE))
+		{
+			$e404 = TRUE;
 		}
 	}
 
