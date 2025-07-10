@@ -9,6 +9,9 @@
         "simple-datatables/style.css",
     );
     $config['js'] = array(
+        "jquery/jquery.min.js",
+        "jquery/jquery-ui.min.js",
+        "jquery/jquery-cookie.js",
         "apexcharts/apexcharts.min.js",
         "bootstrap/js/bootstrap.bundle.min.js",
         "chart.js/chart.umd.js",

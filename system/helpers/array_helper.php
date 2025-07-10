@@ -114,3 +114,33 @@ if ( ! function_exists('elements'))
 		return $return;
 	}
 }
+
+if ( ! function_exists('azarr')) {
+	function azarr($array, $key, $default = null) {
+		if(is_object($array)) {
+        	trigger_error('Parameter is object');
+	    }
+	    return isset($array[$key]) ? $array[$key] : $default;
+	}
+}
+
+if ( ! function_exists('azobj')) {
+	function azobj($object, $key, $default = null) {
+        return isset($object->$key) ? $object->$key : $default;
+    }
+}
+
+if ( ! function_exists('azarr_explode')) {
+	function azarr_explode($data) {
+		if (is_array($data)) {
+			$data = implode(',', $data);
+		}
+		$xdata = str_replace(", ", ",", $data);
+		$xdata = str_replace("~", " ", $xdata);
+		$rdata = array();
+		if (strlen($xdata) > 0) {
+			$rdata = explode(",", $xdata);
+		}
+		return $rdata;
+	}
+}

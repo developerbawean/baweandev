@@ -184,16 +184,16 @@ class CI_AZApp extends CI_AZ {
 		// $this->js .= $this->minify_js($this->js_view);
 		$this->js .= $this->js_view;
 
-		// $js = "<script type='text/javascript'>";
-		// $js .= $this->minify_js($this->js);
+		$js = "<script type='text/javascript'>";
+		$js .= $this->minify_js($this->js);
 
-		// $js .= "jQuery(document).ready(function(){";
-		// $js .= $this->minify_js($this->js_ready);
-		// $js .= "});";
+		$js .= "jQuery(document).ready(function(){";
+		$js .= $this->minify_js($this->js_ready);
+		$js .= "});";
 
-		// $js .= "</script>";
+		$js .= "</script>";
 
-		// $azapp .= $js;
+		$azapp .= $js;
 
 		$azapp .= $this->js_link;
 

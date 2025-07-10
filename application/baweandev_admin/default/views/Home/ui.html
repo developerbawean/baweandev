@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kontrol Lampu Indikator</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .status {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: #333;
+    width: 180px;
+    text-align: center;
+  }
+
+  .status.on {
+    background: #2ecc71;
+    color: #121212;
+  }
+
+  .status.off {
+    background: #e74c3c;
+    color: #fff;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 20px;
+  }
+
+  button {
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  button.on {
+    background: #2ecc71;
+    color: #121212;
+  }
+
+  button.on:hover {
+    background: #27ae60;
+  }
+
+  button.off {
+    background: #e74c3c;
+    color: white;
+  }
+
+  button.off:hover {
+    background: #c0392b;
+  }
+
+  .message {
+    margin-top: 20px;
+    height: 24px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<h1>Kontrol Lampu Indikator</h1>
+<div id="status" class="status off">Status: OFF</div>
+
+<div class="buttons">
+  <button id="btnOn" class="on">ON</button>
+  <button id="btnOff" class="off">OFF</button>
+</div>
+
+<div id="message" class="message"></div>
+
+<script>
+  const apiBase = 'https://091575cabcf6.ngrok-free.app/baweandev/domain/default/administrator/api/device';
+  const deviceKey = 'KOS123KEY';
+
+  const statusEl = document.getElementById('status');
+  const messageEl = document.getElementById('message');
+
+  async function updateStatus() {
+    try {
+      const res = await fetch(`${apiBase}/status`);
+      const data = await res.json();
+
+      if (data.status === 'on') {
+        statusEl.textContent = 'Status: ON';
+        statusEl.classList.add('on');
+        statusEl.classList.remove('off');
+      } else {
+        statusEl.textContent = 'Status: OFF';
+        statusEl.classList.add('off');
+        statusEl.classList.remove('on');
+      }
+    } catch (e) {
+      statusEl.textContent = 'Status: Error';
+      statusEl.classList.remove('on');
+      statusEl.classList.remove('off');
+    }
+  }
+
+  async function sendStatus(status) {
+    messageEl.textContent = 'Mengirim...';
+
+    try {
+      const res = await fetch(`${apiBase}/device`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-DEVICE-KEY': deviceKey
+        },
+        body: `status=${status}`
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        messageEl.textContent = `Lampu berhasil dinyalakan: ${status.toUpperCase()}`;
+        updateStatus();
+      } else {
+        messageEl.textContent = `Gagal: ${data.message}`;
+      }
+    } catch (error) {
+      messageEl.textContent = 'Terjadi kesalahan saat mengirim data';
+    }
+  }
+
+  document.getElementById('btnOn').addEventListener('click', () => sendStatus('on'));
+  document.getElementById('btnOff').addEventListener('click', () => sendStatus('off'));
+
+  // Update status awal dan setiap 5 detik
+  updateStatus();
+  setInterval(updateStatus, 5000);
+</script>
+
+</body>
+</html>
