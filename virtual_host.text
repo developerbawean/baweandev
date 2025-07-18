@@ -1,0 +1,56 @@
+baweandev/
+│
+├── application/
+│   ├── admin/
+│   │   ├── default/
+│   │   ├── project1/
+│   │   └── project2/
+│   └── front/
+│       ├── default/
+│       ├── project1/
+│       └── project2/
+│
+├── assets/
+├── domain/
+│   ├── administrator/
+│   │   └── index.php
+│   └── index.php
+├── system/
+└── index.php
+
+saya ingin config saya seperti ini 
+$config['base_url'] = 'http://default.test/baweandev/';
+$config['app_url']  = 'http://default.test/';
+
+bagaimana membuat virtualhostnya
+saya menggunakan ngrok https://darling-precise-impala.ngrok-free.app
+saya menggunakan laragon
+C:\laragon\etc\apache2\sites-enabled\default.test.config
+di dalamnya seperti ini 
+<VirtualHost *:80>
+    ServerName default.test
+    DocumentRoot "C:/laragon/www/baweandev/domain"
+
+    <Directory "C:/laragon/www/baweandev/domain">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog "logs/default.test-error.log"
+    CustomLog "logs/default.test-access.log" common
+</VirtualHost>
+
+C:\Windows\System32\drivers\etc\host
+isinya ini
+0.0.0.1	mssplus.mcafee.com
+127.0.0.1 default.test
+127.0.0.1      asik_client.test     #laragon magic!
+127.0.0.1      asik_client1.test    #laragon magic!
+127.0.0.1      baweandev.test       #laragon magic!
+127.0.0.1      baweandev1.test      #laragon magic!
+127.0.0.1      liteprint.test       #laragon magic!
+127.0.0.1      lms.test             #laragon magic!
+127.0.0.1      pirtualin.test       #laragon magic!
+127.0.0.1      printku.test         #laragon magic!
+127.0.0.1      printkuadmin.test    #laragon magic!

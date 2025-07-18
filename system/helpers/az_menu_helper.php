@@ -26,7 +26,7 @@ if (!function_exists('az_generate_menu_loop')) {
 				}
 			}
 
-			$show_menu = in_array($name, $arr_menu_name) || $username == 'BucinBGMID';
+			$show_menu = in_array($name, $arr_menu_name) || $username == 'baweandev';
 
 			if ($show_menu) {
 				// Jika punya submenu
@@ -59,36 +59,21 @@ if (!function_exists('az_generate_menu')) {
 		$ci = &get_instance();
 		$ci->config->load('menu');
 		$ci->load->helper('array');
-
 		$menu = $ci->config->item('menu');
 
-		// SEMENTARA: tampilkan semua menu tanpa cek role user
-		// $idrole = $ci->session->userdata('idrole');
-		// $ci->db->where('idrole', $idrole);
-		// $ci->db->where('access', 1);
-		// $ci->db->where('status', 1);
-		// $data = $ci->db->get('user_role');
-		$arr_menu_name = [];
-
-		// ambil semua nama menu dari config agar semuanya tampil
-		$collect_menu_name = function($menus) use (&$collect_menu_name) {
-			$names = [];
-			foreach ($menus as $m) {
-				if (isset($m['name'])) {
-					$names[] = $m['name'];
-				}
-				if (isset($m['submenu']) && is_array($m['submenu']) && count($m['submenu']) > 0) {
-					$names = array_merge($names, $collect_menu_name($m['submenu']));
-				}
-			}
-			return $names;
-		};
-		$arr_menu_name = $collect_menu_name($menu);
+		$idrole = $ci->session->userdata('idrole');
+		$ci->db->where('idrole', $idrole);
+		$ci->db->where('access', 1);
+		$ci->db->where('status', 1);
+		$data = $ci->db->get('user_role');
+		$arr_menu_name = array();
+		foreach ($data->result() as $key => $value) {
+			$arr_menu_name[] = $value->menu_name;
+		}
 
 		$return = '';
 		$loop_submenu = az_generate_menu_loop($menu, $arr_menu_name, $breadcrumb);
 		$return .= $loop_submenu;
-
 		return $return;
 	}
 }
@@ -173,28 +158,33 @@ if (!function_exists('render_menu_access')) {
         }
 
         $output = '';
-
-        // Header
-        $output .= '<div class="row fw-bold border-bottom pb-2 mb-2">
-                        <div class="col-md-3">Menu</div>
-                        <div class="col-md-1">Access</div>
-                        <div class="col-md-8">Role Access</div>
-                    </div>';
-
         foreach ($menu_config as $menu) {
             $menu_name = $menu['name'];
             $is_checked = isset($user_access[$menu_name]) ? 'checked' : '';
 
             $output .= '<div class="row align-items-center py-2 border-bottom">
                             <div class="col-md-3">
+								<input type="hidden" name="role_name[]" value="'.azarr($menu, 'name').'">
                                 <span class="menu-name">'.htmlspecialchars($menu['title']).'</span>
                             </div>
                             <div class="col-md-1">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="access['.$menu_name.']" '.$is_checked.'>
+									<input type="hidden" name="access['.azarr($menu, 'name').']" value="0">
+                                    <input class="form-check-input access access-'.azarr($menu, 'name').'" type="checkbox" name="access['.azarr($menu, 'name').']" value="1" '.$is_checked.'>
                                 </div>
                             </div>
-                            <div class="col-md-8"></div>
+                            <div class="col-md-8 d-flex flex-wrap gap-3">';
+								$role = azarr($menu, 'role', array());
+								foreach ($role as $role_key => $role_value) {
+									$is_checked_role = isset($user_access[azarr($role_value, 'role_name')]) ? 'checked' : '';
+									$output .= '<div class="form-check form-switch">
+										<input type="hidden" name="access['.azarr($role_value, 'role_name').']" value="0">
+										<input class="form-check-input access access-'.azarr($role_value, 'role_name').'" type="checkbox" name="access['.azarr($role_value, 'role_name').']" value="1" '.$is_checked_role.'>
+										<span class="role-name">'.azarr($role_value, 'role_title').'</span>
+										<input type="hidden" name="role_name[]" value="'.azarr($role_value, 'role_name').'">
+									</div>';
+								}
+				$output .= '</div>
                         </div>';
 
             // Submenu
@@ -205,14 +195,27 @@ if (!function_exists('render_menu_access')) {
 
                     $output .= '<div class="row align-items-center py-2 border-bottom">
                                     <div class="col-md-3">
-                                        <span class="submenu-name">'.htmlspecialchars($submenu['title']).'</span>
+										<input type="hidden" name="role_name[]" value="'.azarr($submenu, 'name').'">
+                                        <span class="submenu-name">'.azarr($submenu, 'title').'</span>
                                     </div>
                                     <div class="col-md-1">
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" name="access['.$submenu_name.']" '.$is_checked_sub.'>
+											<input type="hidden" name="access['.azarr($submenu, 'name').']" value="0">
+                                            <input class="form-check-input access access-'.azarr($submenu, 'name').'" type="checkbox" name="access['.azarr($submenu, 'name').']" value="1" '.$is_checked_sub.'>
                                         </div>
                                     </div>
-                                    <div class="col-md-8"></div>
+                                    <div class="col-md-8 d-flex flex-wrap gap-3">';
+										$rolesub = azarr($submenu, 'role', array());
+										foreach ($rolesub as $rolesub_key => $rolesub_value) {
+											$is_checked_rolesub = isset($user_access[azarr($rolesub_value, 'role_name')]) ? 'checked' : '';
+											$output .= '<div class="form-check form-switch">
+												<input type="hidden" name="access['.azarr($rolesub_value, 'role_name').']" value="0">
+												<input class="form-check-input access access-'.azarr($rolesub_value, 'role_name').'" type="checkbox" name="access['.azarr($rolesub_value, 'role_name').']" value="1" '.$is_checked_rolesub.'>
+												<span class="role-name">'.azarr($rolesub_value, 'role_title').'</span>
+												<input type="hidden" name="role_name[]" value="'.azarr($rolesub_value, 'role_name').'">
+											</div>';
+										}
+						$output .= '</div>
                                 </div>';
 
                     // Sub-submenu (opsional, jika ada)
@@ -223,14 +226,27 @@ if (!function_exists('render_menu_access')) {
 
                             $output .= '<div class="row align-items-center py-2 border-bottom ps-4">
                                             <div class="col-md-3">
-                                                <span class="submenu-name">'.htmlspecialchars($ssub['title']).'</span>
+												<input type="hidden" name="role_name[]" value="'.azarr($ssub, 'name').'">
+                                                <span class="submenu-name">'.azarr($ssub, 'title').'</span>
                                             </div>
                                             <div class="col-md-1">
                                                 <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" name="access['.$ssub_name.']" '.$is_checked_ssub.'>
+													<input type="hidden" name="access['.azarr($ssub, 'name').']" value="0">
+                                                    <input class="form-check-input access access-'.azarr($ssub, 'name').'" type="checkbox" name="access['.azarr($ssub, 'name').']" value="1" '.$is_checked_ssub.'>
                                                 </div>
                                             </div>
-                                            <div class="col-md-8"></div>
+                                            <div class="col-md-8 d-flex flex-wrap gap-3">';
+												$rolesubsub = azarr($ssub, 'role', array());
+												foreach ($rolesubsub as $rolesubsub_key => $rolesubsub_value) {
+													$is_checked_rolesubsub = isset($user_access[azarr($rolesubsub_value, 'role_name')]) ? 'checked' : '';
+													$output .= '<div class="form-check form-switch">
+														<input type="hidden" name="access['.azarr($rolesubsub_value, 'role_name').']" value="0">
+														<input class="form-check-input access access-'.azarr($rolesubsub_value, 'role_name').'" type="checkbox" name="access['.azarr($rolesubsub_value, 'role_name').']" value="1" '.$is_checked_rolesubsub.'>
+														<span class="role-name">'.azarr($rolesubsub_value, 'role_title').'</span>
+														<input type="hidden" name="role_name[]" value="'.azarr($rolesubsub_value, 'role_name').'">
+													</div>';
+												}
+								$output .= '</div>
                                         </div>';
                         }
                     }

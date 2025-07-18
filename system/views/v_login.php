@@ -61,7 +61,7 @@
                           $err_login = $this->session->flashdata("error_login");
                           if (strlen($err_login) > 0) {
                       ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alertError">
                               <?php echo $err_login ?>
                               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
@@ -118,6 +118,16 @@
    <?php 
 		echo az_js();
 	?>
+  <script>
+      $(document).ready(function(){
+          // Setelah 5 detik, alert akan fade out dan slide up
+          setTimeout(function() {
+          $("#alertError").fadeTo(500, 0).slideUp(500, function(){
+              $(this).remove(); 
+          });
+          }, 5000);
+      });
+  </script>
 
 </body>
 

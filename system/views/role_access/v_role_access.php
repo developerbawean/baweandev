@@ -6,12 +6,6 @@
         --muted-color: #6c757d;
         --card-shadow: rgba(0, 0, 0, 0.05);
     }
-
-    body {
-        background-color: var(--bg-color);
-        font-family: 'Nunito', sans-serif;
-    }
-
     .card {
         border: none;
         border-radius: 12px;
@@ -48,72 +42,45 @@
     .form-check-label {
         margin-left: 0.25rem;
     }
+    .content-form{
+        padding-bottom: 15px;
+    }
 </style>
 
 <section class="section">
-    <div class="mb-3">
-        <label for="outletSelect" class="form-label fw-bold">Outlet</label>
-        <select id="outletSelect" class="form-select">
-            <option selected>Bawean Dev</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label for="roleAccessSelect" class="form-label fw-bold">Role Access</label>
-        <select id="roleAccessSelect" class="form-select select2">
-            <option selected>Administrator</option>
-            <option>Editor</option>
-            <option>Viewer</option>
-        </select>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <span>Menu List and Access Rights</span>
-        </div>
-        <div class="card-body">
-            <?php echo $menu_view; ?>
-
-            <!-- <div class="row fw-bold border-bottom pb-2 mb-2">
-                <div class="col-md-3">Menu</div>
-                <div class="col-md-1">Access</div>
-                <div class="col-md-8">Role Access</div>
+    <form id="form-role-access" name="form-role-access" method="POST" action="<?php echo app_url();?>role_access/save">
+        <div class="row content-form">
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Outlet</label>
+                <?php echo az_select_outlet(); ?>
             </div>
-            <div class="row align-items-center py-2 border-bottom">
-                <div class="col-md-3">
-                    <span class="menu-name">ASIK</span>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" checked>
-                    </div>
-                </div>
-                <div class="col-md-8"></div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Role Access</label>
+                <select class="form-select select2" name="idrole" id="idrole">
+                    <?php
+                        foreach ($role->result() as $key => $value) {
+                            echo '<option value="'.$value->idrole.'">'.$value->title.'</option>';
+                        }
+                    ?>
+                </select>
             </div>
-            <div class="row align-items-center py-2 border-bottom">
-                <div class="col-md-3">
-                    <span class="submenu-name">Data Karyawan</span>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" checked>
-                    </div>
-                </div>
-                <div class="col-md-8 d-flex gap-3 flex-wrap">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="editSalary1">
-                        <label class="form-check-label" for="editSalary1">Edit Salary</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="editPosition">
-                        <label class="form-check-label" for="editPosition">Edit Position</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="editStatus">
-                        <label class="form-check-label" for="editStatus">Edit Status</label>
-                    </div>
-                </div>
-            </div> -->
         </div>
-    </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span>Menu List and Access Rights</span>
+            </div>
+            <div class="card-body">
+                <div class="row fw-bold border-bottom pb-2 mb-2">
+                    <div class="col-md-3">Menu</div>
+                    <div class="col-md-1">Access</div>
+                    <div class="col-md-8">Role Access</div>
+                </div>
+                <?php echo $menu_view; ?>
+            </div>
+            <div style="text-align: left; padding: 20px 15px;">
+                <button class="btn btn-primary btn-submit" type="button"><i class="ri-save-3-fill"></i> Save Role Access</button>
+            </div>
+        </div>
+    </form>
 </section>

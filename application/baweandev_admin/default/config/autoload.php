@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('session', 'database');
+$autoload['libraries'] = array('session', 'database','form_validation');
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'security', 'az_lang', 'array', 'az_core');
+$autoload['helper'] = array('url', 'security', 'az_lang', 'array', 'az_core', 'azcms_admin', 'az_config');
 
 /*
 | -------------------------------------------------------------------

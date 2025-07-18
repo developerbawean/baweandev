@@ -24,12 +24,9 @@ date_default_timezone_set('Asia/Jakarta');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/baweandev/';
-$config['app_url'] = 'http://localhost/baweandev/domain/default/administrator/';
+$config['base_url'] = 'https://darling-precise-impala.ngrok-free.app/baweandev/';
+$config['app_url'] = 'https://darling-precise-impala.ngrok-free.app/baweandev/domain/default/administrator/';
 $config['theme'] = 'ltheme';
-
-$config['google_key'] = '6LdowLYUAAAAAHsQYD-61Pzg_560xW3Se3rEJzZJ';
-$config['google_secret'] = '6LdowLYUAAAAAEwIa1rPAukXm5KsISbMlgLsreVe';
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -141,7 +138,8 @@ $config['subclass_prefix'] = 'AZ_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = FALSE;
+// $config['composer_autoload'] = FALSE;
+$config['composer_autoload'] = AZAPP.'vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------

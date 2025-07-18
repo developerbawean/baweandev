@@ -5,21 +5,26 @@
             'title' => azlang('Dashboard'),
             'icon' => 'bi-grid',
             'url' => 'home',
-            'role' => array(),
+            "role" => array(
+                array(
+                    'role_name' => 'role_dashboard_save',
+                    'role_title' => 'save Role Access'
+                ),
+            ),
             'submenu' => array(),
         ),
         array(
-            "name" => 'lamp_smart',
-            'title' => azlang('Remote Lampu'),
+            "name" => 'device_control',
+            'title' => azlang('Device Control'),
             'icon' => 'bi-menu-button-wide',
-            'url' => 'Lampu',
+            'url' => '',
             'role' => array(),
             'submenu' => array(
                 array(
-                    "name" => "remote_smart_lamp",
-                    "title" => "Lampu Depan",
+                    "name" => "wifi_config",
+                    "title" => "Wifi Config",
                     'icon' => 'bi-circle',
-                    "url" => "remote_smart",
+                    "url" => "wifi_config",
                     "submenu" => array()
                 ),
             ),
@@ -29,7 +34,12 @@
             'title' => 'Setting',
             'icon' => 'bi-gear-fill',
             'url' => '',
-            'role' => array(),
+            "role" => array(
+                array(
+                    'role_name' => 'role_role_settings',
+                    'role_title' => 'save Role'
+                ),
+            ),
             'submenu' => array(
                 array(
                     "name" => "user_settings",
@@ -43,7 +53,13 @@
                     "title" => "Role Management",
                     'icon' => 'bi-circle',
                     "url" => "role_access",
-                    "submenu" => array()
+                    "submenu" => array(),
+                     "role" => array(
+                        array(
+                            'role_name' => 'role_role_settings_save',
+                            'role_title' => 'save Role Access'
+                        ),
+                    ),
                 ),
                 array(
                     "name" => "config_settings",

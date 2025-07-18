@@ -7,6 +7,8 @@
         "quill/quill.bubble.css",
         "remixicon/remixicon.css",
         "simple-datatables/style.css",
+        "sweetalert/sweetalert2.min.css",
+        "select2/select2.min.css?v2",
     );
     $config['js'] = array(
         "jquery/jquery.min.js",
@@ -20,6 +22,8 @@
         "simple-datatables/simple-datatables.js",
         "tinymce/tinymce.min.js",
         "php-email-form/validate.js",
+        "sweetalert/sweetalert2.min.js",
+        "select2/select2.min.js",
     );
     $config['app_js'] = array(
         "az_theme/main.js",
