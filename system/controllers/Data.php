@@ -78,6 +78,42 @@ class Data extends CI_Controller {
 		echo json_encode($results);
 	}
 
+	public function get_user(){
+		$limit = 20;
+		$q = $this->input->get("term");
+		$page = $this->input->get("page");
+
+		$offset = ($page - 1) * $limit;
+
+		$this->db->order_by("name");
+		if (varlen($q) > 0) {
+			$this->db->like("name", $q);
+		}
+		$this->db->select("iduser as id, name as text");
+		$this->db->where('status', '1');
+		$this->db->where('is_active', '1');
+		$data = $this->db->get("user", $limit, $offset);
+
+		if (varlen($q) > 0) {
+			$this->db->like("name", $q);
+		}
+		$this->db->where('status', '1');
+		$this->db->where('is_active', '1');
+		$cdata = $this->db->get("user");
+		$count = $cdata->num_rows();
+
+		$endCount = $offset + $limit;
+		$morePages = $endCount < $count;
+
+		$results = array(
+		  "results" => $data->result_array(),
+		  "pagination" => array(
+		  	"more" => $morePages
+		  )
+		);
+		echo json_encode($results);
+	}
+
 	public function get_city_by_province()
 	{
 		$province_id = $this->input->post('id');

@@ -21,10 +21,10 @@
             'role' => array(),
             'submenu' => array(
                 array(
-                    "name" => "wifi_config",
-                    "title" => "Wifi Config",
+                    "name" => "register_biometrics",
+                    "title" => "Register Biometrics",
                     'icon' => 'bi-circle',
-                    "url" => "wifi_config",
+                    "url" => "register_biometrics",
                     "submenu" => array()
                 ),
             ),

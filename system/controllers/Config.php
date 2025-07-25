@@ -29,6 +29,13 @@ class Config extends CI_Controller {
 
 		$data['config_application'] = get_config_application();	
 
+		$file = $app->add_file();
+		$file->set_file_size('1 MB');
+		$file->set_id('img');
+		$file->set_file_dir('img/favicon.jpeg');
+		$file->set_path(base_url() . AZAPP . 'assets/');
+		$data['logo'] = $file->render();
+
 		$view = $this->load->view('config/v_config', $data, true);
 		$app->add_content($view);
 

@@ -3,7 +3,7 @@
         'name' => 'baweandev/vendor',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'cb29a7dc82d3ebb79465a2f71d36cc2263e6cc62',
+        'reference' => 'c574c6977f2f3c0c73edefaf1fb09a1658a1a41e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'baweandev/vendor' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'cb29a7dc82d3ebb79465a2f71d36cc2263e6cc62',
+            'reference' => 'c574c6977f2f3c0c73edefaf1fb09a1658a1a41e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

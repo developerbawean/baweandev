@@ -27,11 +27,7 @@
                                 <?php
                                     if ($value->type == 'photo') {
                                 ?>
-                                    <img src="assets/img/profile-img.jpg" alt="Profile">
-                                    <div class="pt-2">
-                                        <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                                        <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
-                                    </div>
+                                    <?php echo $logo; ?>
                                 <?php
                                     }else if ($value->type == 'text') {
                                 ?>

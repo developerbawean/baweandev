@@ -43,3 +43,25 @@ if (!function_exists('az_select_outlet')) {
         return $select->render();
     }
 }
+
+if (!function_exists('az_select_user')) {
+    function az_select_user($id = 'user', $class = '', $attr = 'user')
+    {
+        $ci = &get_instance();
+        $ci->load->library('encryption');
+        $azapp = $ci->load->library('AZApp');
+        $select = $ci->azapp->add_select2();
+        $select->set_id($id);
+        $select->set_url('data/get_user');
+        $select->set_placeholder('Select a User');
+        if (strlen($class) > 0) {
+            $select->add_class($class);
+        }
+        if (strlen($attr) > 0) {
+            $select->add_attr('data-id', $ci->encryption->encrypt($attr . '.iduser'));
+            $select->add_attr('w', 'true');
+        }
+
+        return $select->render();
+    }
+}

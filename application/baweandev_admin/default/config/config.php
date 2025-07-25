@@ -138,8 +138,7 @@ $config['subclass_prefix'] = 'AZ_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-// $config['composer_autoload'] = FALSE;
-$config['composer_autoload'] = AZAPP.'vendor/autoload.php';
+$config['composer_autoload'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
