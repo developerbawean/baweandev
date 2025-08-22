@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'security', 'az_lang', 'array', 'az_core', 'azcms_admin', 'az_config');
+$autoload['helper'] = array('url', 'security', 'az_lang', 'array', 'az_core', 'az_crud', 'azcms_admin', 'az_config');
 
 /*
 | -------------------------------------------------------------------

@@ -32,11 +32,21 @@ class User extends CI_Controller {
 			<button type="button" class="btn btn-success" id="resetFilterBtn">Excel</button>
 			<button type="button" class="btn btn-danger" id="resetFilterBtn">PDF</button>
 		');
+		$btn = " <button class='btn btn-outline-success btn-excel' type='button' id='btn_export'><i class='fa fa-file-excel'></i> Export</button>";
+		$btn .= " <button class='btn btn-outline-success btn-excel' type='button' id='btn_export'><i class='fa fa-file-excel'></i> Export</button>";
+		$crud->set_btn_top_custom($btn);
 
 		$v_filter = $this->load->view('user/vf_user', '', true);
 		$crud->set_top_filter($v_filter);
 
+		$v_modal = $this->load->view('user/v_user', '', true);
+		$crud->set_form('form');
+		$crud->set_modal($v_modal);
+		$crud->set_modal_title(azlang("User"));
+		$v_modal = $crud->generate_modal();
+
 		$crud = $crud->render();
+		$crud .= $v_modal;	
 		$app->add_content($crud);
 
         $data_header['title'] = azlang('Users');
@@ -100,7 +110,8 @@ class User extends CI_Controller {
 
 	public function edit()
 	{
-
+		$this->db->join('role', 'user.idrole = role.idrole', 'left');
+		az_crud_edit('iduser, user.name, title, phone, email');
 	}
 
 	public function delete()

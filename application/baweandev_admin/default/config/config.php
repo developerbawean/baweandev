@@ -24,8 +24,8 @@ date_default_timezone_set('Asia/Jakarta');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'https://darling-precise-impala.ngrok-free.app/baweandev/';
-$config['app_url'] = 'https://darling-precise-impala.ngrok-free.app/baweandev/domain/default/administrator/';
+$config['base_url'] = 'http://localhost/baweandev/';
+$config['app_url'] = 'http://localhost/baweandev/domain/default/administrator/';
 $config['theme'] = 'ltheme';
 /*
 |--------------------------------------------------------------------------

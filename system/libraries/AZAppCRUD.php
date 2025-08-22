@@ -426,11 +426,6 @@ class CI_AZAppCRUD extends CI_AZ {
 							</div>';
 						}
 		$table .= '			<div class="card-body">';
-		$table .= 				'<div class="'.$btn_add_position.' btn-top-table">';
-									if ($this->btn_add) {
-										$table .= '<button class="btn btn-outline-primary btn-add-'.$this->id.'" type="button"><i class="bi bi-plus"></i> '.azlang('Add').'</button>';
-									}		
-		$table .= '				</div>';
 		$table .= '				<table id="myDataTable_'.$this->id.'" class="table table-striped table-hover">
 									<thead>
 										<tr role="row" class="heading">';
@@ -503,18 +498,38 @@ class CI_AZAppCRUD extends CI_AZ {
 			}
 		}
 
+		// 	'l': length menu (dropdown jumlah baris)
+		// 'f': filter (search input)
+		// 't': tabel
+		// 'i': informasi jumlah data
+		// 'p': pagination
+
+		$init_complete = 'function () {';
+		if ($this->btn_add) {
+			$init_complete .= '$("<button type=\"button\" class=\"btn btn-outline-primary me-1 btn-add-'.$this->id.'\"><i class=\"bi bi-plus\"></i> ' . azlang('Add') .'</button>").appendTo($(".custom-btn-container"));';
+		}
+		if (strlen($this->btn_top_custom) > 0) {
+			$init_complete .= '$("'.$this->btn_top_custom.'").appendTo($(".custom-btn-container"));';
+		}
+		$init_complete .= '}';
+
+
 		$js_table = '
 			$(document).ready(function() {
 				var table = $("#myDataTable_'.$this->id.'").DataTable({
+					"dom"		:	\'<"row"<"col-sm-12 col-md-6"<"custom-btn-container gap-2">><"col-sm-12 col-md-6"f>>\' +
+									\'<"row"<"col-sm-12"tr>>\' +
+									\'<"row mt-3"<"col-md-6"l><"col-md-6 d-flex justify-content-end"p>>\' +
+									\'<"row"<"col-md-6"i>>\',
+					initComplete: '.$init_complete.',
 					"pagingType": "full_numbers",
 					"lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
 					"responsive": true,
 					"processing": true,
 					"serverSide": true,
-					"dom": \'<"row"<"col-sm-6 col-sm-offset-6"'.$hide_search.'>> <"row"<"col-sm-12"tr>><"row"<"col-sm-6"'.$limit_entries.'><"col-sm-6"p>><"row"<"col-sm-12"i>>\',
-					"ajax": {
-						"url": '.$this->url.', 
-						"type": "POST",
+					"ajax"		: {
+						"url"	: '.$this->url.', 
+						"type"	: "POST",
 					},
 				});
 
@@ -555,6 +570,17 @@ class CI_AZAppCRUD extends CI_AZ {
 					table.search("").columns().search("").draw();
 				});
 			});
+
+			var callback_edit_'.$this->id.' = function(response) {
+				'.$this->callback_edit.'
+			};
+
+			jQuery("body").on("click", ".btn-edit-'.$this->id.'", function(){
+				var id = jQuery(this).attr("data_id");
+
+				edit('.$this->url_edit.', id, "'.$this->form.'", "'.$this->id.'", callback_edit_'.$this->id.', '.$this->edit_type.');
+			});
+
 		';
 			
 
@@ -1074,7 +1100,7 @@ class CI_AZAppCRUD extends CI_AZ {
 
 			$btn_ = "";
 			if ($this->edit) {
-				$btn_ .= '<button class="btn btn-outline-warning btn-sm btn-edit-'.$this->id.'" data_id= "'.$value[$idtable].'"><i class="bi bi-pencil-square"></i> '.azlang('Edit').'</button>';
+				$btn_ .= '<button class="btn btn-outline-warning btn-sm btn-edit-'.$this->id.'" data_id= "'.$value[$idtable].'" data-bs-toggle="modal" data-bs-target="#modal-'.$this->id.'"><i class="bi bi-pencil-square"></i> '.azlang('Edit').'</button>';
 			}
 			if ($this->delete) {
 				$btn_ .= '<button class="btn btn-outline-danger btn-sm btn-delete-'.$this->id.'" data_id= "'.$value[$idtable].'"><i class="bi bi-trash"></i> '.azlang('Delete').'</button>';
@@ -1155,48 +1181,69 @@ class CI_AZAppCRUD extends CI_AZ {
 	}
 
 	public function generate_modal() {
-		$modal = '<div class="modal fade az-modal az-modal-'.$this->id.'" data-width="800">
-				    <div class="modal-dialog modal-lg">
-				        <div class="modal-content">
-				            <div class="modal-header">
-				                <div class="az-modal-close" data-dismiss="modal" aria-hidden="true">
-				                	<div class="caret-close"></div>
-				                	<div class="modal-btn-close">
-				                		<button type="button" class="close">X</button>
-				                	</div>
-				                </div>
-				                <h4 class="modal-title"><span>'.azlang('Add').'</span>&nbsp;'.$this->modal_title.'</h4>
 
-				            </div>
-				            <div class="modal-body">';
-		$modal .= $this->modal;
-		$modal .= '    		</div>
-				            <div class="modal-footer">
-				                <div class="pull-right">';
-
-        if ($this->btn_left_modal) {
-        	foreach ($this->btn_left_modal as $key => $value) {
-				$modal .='	      <button class="btn btn-primary az-btn-primary btn-'.$key.'" type="button">'.$value.'</button>';
-        	}
-        }
-
-        if ($this->btn_save_modal) {
-			$modal .='	          <button class="btn btn-primary az-btn-primary btn-save-'.$this->id.'" type="button">'.azlang('Save').'</button>';
-        }
-
-        if ($this->btn_right_modal) {
-        	foreach ($this->btn_right_modal as $key => $value) {
-				$modal .='	      <button class="btn btn-primary az-btn-primary btn-'.$key.'" type="button">'.$value.'</button>';
-        	}
-        }
+		$modal = '	<div class="modal fade" id="modal-'.$this->id.'" tabindex="-1" style="display: none;" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-scrollable">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">'.azlang('Add').' '.$this->modal_title.'</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">';
+		$modal .= 					$this->modal;
+		$modal .= ' 			</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary">Save changes</button>
+								</div>
+							</div>
+						</div>
+					</div>';
+		
 
 
-		$modal .= '
-				                </div>
-				            </div>
-				        </div>
-				    </div>
-				</div>';
+		// $modal = '<div class="modal fade az-modal az-modal-'.$this->id.'" data-width="800">
+		// 		    <div class="modal-dialog modal-lg">
+		// 		        <div class="modal-content">
+		// 		            <div class="modal-header">
+		// 		                <div class="az-modal-close" data-dismiss="modal" aria-hidden="true">
+		// 		                	<div class="caret-close"></div>
+		// 		                	<div class="modal-btn-close">
+		// 		                		<button type="button" class="close">X</button>
+		// 		                	</div>
+		// 		                </div>
+		// 		                <h4 class="modal-title"><span>'.azlang('Add').'</span>&nbsp;'.$this->modal_title.'</h4>
+
+		// 		            </div>
+		// 		            <div class="modal-body">';
+		// $modal .= $this->modal;
+		// $modal .= '    		</div>
+		// 		            <div class="modal-footer">
+		// 		                <div class="pull-right">';
+
+        // if ($this->btn_left_modal) {
+        // 	foreach ($this->btn_left_modal as $key => $value) {
+		// 		$modal .='	      <button class="btn btn-primary az-btn-primary btn-'.$key.'" type="button">'.$value.'</button>';
+        // 	}
+        // }
+
+        // if ($this->btn_save_modal) {
+		// 	$modal .='	          <button class="btn btn-primary az-btn-primary btn-save-'.$this->id.'" type="button">'.azlang('Save').'</button>';
+        // }
+
+        // if ($this->btn_right_modal) {
+        // 	foreach ($this->btn_right_modal as $key => $value) {
+		// 		$modal .='	      <button class="btn btn-primary az-btn-primary btn-'.$key.'" type="button">'.$value.'</button>';
+        // 	}
+        // }
+
+
+		// $modal .= '
+		// 		                </div>
+		// 		            </div>
+		// 		        </div>
+		// 		    </div>
+		// 		</div>';
 		return $modal;
 	}
 
